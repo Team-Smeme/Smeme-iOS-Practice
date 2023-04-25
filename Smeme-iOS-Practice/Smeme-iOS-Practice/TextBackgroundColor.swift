@@ -29,12 +29,21 @@ final class TextBackgroundColor: UIViewController {
         return button
     }()
     
+    var button2: UIButton = {
+        let button = UIButton()
+        button.setTitle("버튼", for: .normal)
+        button.backgroundColor = .blue
+        button.addTarget(self, action: #selector(grayTextHighlightColor), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
         view.addSubview(label)
         view.addSubview(button)
+        view.addSubview(button2)
         
         label.snp.makeConstraints {
             $0.trailing.leading.equalToSuperview().inset(16)
@@ -43,6 +52,11 @@ final class TextBackgroundColor: UIViewController {
         
         button.snp.makeConstraints {
             $0.top.equalTo(label.snp.bottom).offset(20)
+            $0.centerX.equalToSuperview()
+        }
+        
+        button2.snp.makeConstraints {
+            $0.top.equalTo(button.snp.bottom).offset(20)
             $0.centerX.equalToSuperview()
         }
     }
@@ -57,6 +71,22 @@ final class TextBackgroundColor: UIViewController {
             self.label.attributedText = attributeString
         } else {
             self.label.text = string
+        }
+    }
+    
+    @objc func grayTextHighlightColor() {
+        guard let string = self.label.text else { return }
+        flag = !flag
+        
+        if flag {
+            self.label.textColor = .systemGray2
+            let attributeString = NSMutableAttributedString(string: string)
+            attributeString.addAttribute(.backgroundColor, value: UIColor.green, range: (string as NSString).range(of: "interactions provide edit actions"))
+            attributeString.addAttribute(.foregroundColor, value: UIColor.black, range: (string as NSString).range(of: "interactions provide edit actions"))
+            self.label.attributedText = attributeString
+        } else {
+            self.label.text = string
+            self.label.textColor = .black
         }
     }
 }
